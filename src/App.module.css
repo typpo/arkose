@@ -1,5 +1,21 @@
-.container {
+.app {
+  height: 100%;
+}
+
+.documentContainer {
   background-color: #f8f9fa;
-  height: 100vh;
-  padding: 4rem;
+  min-height: 100vh;
+  padding: 6rem;
+}
+
+@media (max-width: 1024px) {
+  .documentContainer {
+    padding: 6rem 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .documentContainer {
+    padding: 6rem 0.5rem;
+  }
 }

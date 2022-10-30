@@ -1,7 +1,7 @@
 .container {
   background-color: #fff;
   max-width: 1024px;
-  min-height: 80%;
+  min-height: 100vh;
   margin: 0 auto;
   padding: 8rem 8rem;
 
@@ -10,4 +10,16 @@
 
 .editor > div {
   font-size: 16px;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding: 4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .documentContainer {
+    padding: 2rem;
+  }
 }

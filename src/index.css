@@ -13,6 +13,15 @@
   -webkit-text-size-adjust: 100%;
 }
 
-html, body {
+html,
+body {
   margin: 0;
+}
+
+.MuiMenu-paper {
+  transition-duration: 0s !important;
+}
+
+.ql-editor {
+  line-height: 1.8;
 }

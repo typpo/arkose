@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import QuillMarkdown from 'quilljs-markdown';
+import store from 'store';
 import { Configuration, OpenAIApi } from 'openai';
 import { ToastContainer, toast } from 'react-toastify';
+
 import Config from './config';
+
+import type { DeltaStatic as QuillDelta } from 'quill';
 
 import 'react-quill/dist/quill.bubble.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,17 +15,23 @@ import styles from './Document.module.css';
 
 ReactQuill.Quill.register('modules/QuillMarkdown', QuillMarkdown);
 
-const configuration = new Configuration({
-  apiKey: Config.OpenAI.apiKey,
-});
-const openai = new OpenAIApi(configuration);
+interface DocumentProps {
+  quillRef: React.MutableRefObject<ReactQuill | null>;
+  quillDelta: QuillDelta | null;
+  onChange: (html: string, delta: QuillDelta) => void;
+}
 
-export default function Document() {
-  const [value, setValue] = React.useState('');
-  const quillRef = React.useRef<ReactQuill>(null);
-
+export default function Document({ quillRef, quillDelta, onChange }: DocumentProps) {
+  React.useEffect(() => {}, []);
   const handleClick = () => {
     quillRef.current?.focus();
+  };
+
+  const handleChange = (html: string) => {
+    const editor = quillRef.current?.getEditor();
+    if (editor) {
+      onChange(html, editor.getContents());
+    }
   };
 
   const handleKeyDown = async (event: React.KeyboardEvent) => {
@@ -66,12 +76,16 @@ export default function Document() {
 
     editor.disable();
     const loadingToast = toast.loading('Generating text...');
+    const configuration = new Configuration({
+      apiKey: Config.OpenAI.apiKey || store.get('openAiApiKey'),
+    });
+    const openai = new OpenAIApi(configuration);
     const completion = await openai.createCompletion({
       model: 'text-davinci-002',
       prompt: before.trim(),
       suffix: after.trim() ? after.trim() : undefined,
-      max_tokens: 256,
-      temperature: 0.7,
+      max_tokens: Number(store.get('openAiMaxTokens')) || 256,
+      temperature: Number(store.get('openAiTemperature')) || 0.7,
       best_of: 1,
       presence_penalty: 0,
     });
@@ -96,8 +110,8 @@ export default function Document() {
         className={styles.editor}
         ref={quillRef}
         theme="bubble"
-        value={value}
-        onChange={setValue}
+        value={quillDelta || ''}
+        onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder={`Start writing... then press ${
           window.navigator.platform.startsWith('Mac') ? 'Cmd' : 'Ctrl'

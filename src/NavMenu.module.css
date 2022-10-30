@@ -1,0 +1,42 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border-bottom: 1px solid #dadce0;
+}
+
+.menus {
+  height: 3em;
+  display: flex;
+  align-items: center;
+  max-width: calc(8rem * 2 + 1024px);
+  margin: 0 auto;
+  gap: 3rem;
+}
+
+.menuTopLevel {
+  cursor: pointer;
+  user-select: none;
+}
+
+.saveStatus {
+  margin-left: auto;
+  font-size: 0.8rem;
+}
+
+.success {
+  color: #98af99;
+}
+
+@media (max-width: 1350px) {
+  .menus {
+    margin-left: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .menus {
+  }
+}
