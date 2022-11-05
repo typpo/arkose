@@ -105,50 +105,52 @@ export default function NavMenu({
 
   return (
     <div className={styles.navbar}>
-      <div className={styles.menus}>
-        <div
-          id="file-menu"
-          className={styles.menuTopLevel}
-          onClick={(event) =>
-            fileAnchorEl ? setFileAnchorEl(null) : setFileAnchorEl(event.currentTarget)
-          }
-        >
-          File
-        </div>
-        <Menu
-          elevation={2}
-          anchorEl={fileAnchorEl}
-          open={!!fileAnchorEl}
-          onClose={handleClose}
-          MenuListProps={{
-            'aria-labelledby': 'file-menu',
-          }}
-        >
-          <MenuItem onClick={handleCreateNewDocument}>New document</MenuItem>
-          <Divider />
-          <MenuItem onClick={handleSaveHtml}>Save as HTML</MenuItem>
-          <MenuItem onClick={handleSaveMarkdown}>Save as Markdown</MenuItem>
-          <MenuItem onClick={handleSaveDocx}>Save as DOCX</MenuItem>
-        </Menu>
-        <div
-          id="settings-menu"
-          className={styles.menuTopLevel}
-          onClick={(event) => setSettingsOpen(true)}
-        >
-          Settings
-        </div>
-        <Settings
-          open={settingsOpen}
-          onClose={() => {
-            setSettingsOpen(false);
-            handleClose();
-          }}
-        />
-        {/*
+      <div className={styles.gutter}>
+        <div className={styles.menus}>
+          <div
+            id="file-menu"
+            className={styles.menuTopLevel}
+            onClick={(event) =>
+              fileAnchorEl ? setFileAnchorEl(null) : setFileAnchorEl(event.currentTarget)
+            }
+          >
+            File
+          </div>
+          <Menu
+            elevation={2}
+            anchorEl={fileAnchorEl}
+            open={!!fileAnchorEl}
+            onClose={handleClose}
+            MenuListProps={{
+              'aria-labelledby': 'file-menu',
+            }}
+          >
+            <MenuItem onClick={handleCreateNewDocument}>New document</MenuItem>
+            <Divider />
+            <MenuItem onClick={handleSaveHtml}>Save as HTML</MenuItem>
+            <MenuItem onClick={handleSaveMarkdown}>Save as Markdown</MenuItem>
+            <MenuItem onClick={handleSaveDocx}>Save as DOCX</MenuItem>
+          </Menu>
+          <div
+            id="settings-menu"
+            className={styles.menuTopLevel}
+            onClick={(event) => setSettingsOpen(true)}
+          >
+            Settings
+          </div>
+          <Settings
+            open={settingsOpen}
+            onClose={() => {
+              setSettingsOpen(false);
+              handleClose();
+            }}
+          />
+          {/*
         <div className={styles.saveStatus}>
           {saved ? <span className={styles.success}>✓ Saved</span> : null}
         </div>
         */}
+        </div>
       </div>
       <ToastContainer />
     </div>
