@@ -83,7 +83,7 @@ export default function NavMenu({
       return;
     }
     const md = new Turndown().turndown(html);
-    saveAs(md, 'document.md');
+    saveAs(new Blob([md]), 'document.md');
     handleClose();
   };
 

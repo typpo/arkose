@@ -25,3 +25,7 @@ body {
 .ql-editor {
   line-height: 1.8;
 }
+
+.ql-editor p {
+  margin: 1rem 0;
+}
