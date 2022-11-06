@@ -22,6 +22,20 @@
   gap: 1.5rem;
 }
 
+.brand {
+  margin-left: auto;
+  font-size: 10px;
+  opacity: 0.5;
+}
+
+.brand img {
+  vertical-align: middle;
+  margin-top: -3px;
+  margin-left: 4px;
+  width: 20px;
+  height: auto;
+}
+
 .menuTopLevel {
   cursor: pointer;
   user-select: none;

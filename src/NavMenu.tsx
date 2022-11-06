@@ -8,6 +8,8 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import Settings from './Settings';
 
+import Logo from '../public/favicon.png';
+
 import type { Editor } from '@tiptap/core';
 
 import styles from './NavMenu.module.css';
@@ -158,6 +160,10 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
               handleClose();
             }}
           />
+          <div className={styles.brand}>
+            Arkose AI
+            <img src={Logo} alt="Arkose AI logo" />
+          </div>
           {/*
         <div className={styles.saveStatus}>
           {saved ? <span className={styles.success}>✓ Saved</span> : null}
