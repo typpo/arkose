@@ -3,10 +3,7 @@ import React from 'react';
 import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Turndown from 'turndown';
 import { saveAs } from 'file-saver';
-import { defaultDocxSerializer, writeDocx } from 'prosemirror-docx';
-import { Packer } from 'docx';
 import { ToastContainer, toast } from 'react-toastify';
 
 import Settings from './Settings';
@@ -66,7 +63,8 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
     handleClose();
   };
 
-  const handleSaveMarkdown = () => {
+  const handleSaveMarkdown = async () => {
+    const Turndown = (await import('turndown')).default;
     const html = editor.getHTML();
     const md = new Turndown().turndown(html);
     saveAs(new Blob([md]), 'document.md');
@@ -74,6 +72,8 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
   };
 
   const handleSaveDocx = async () => {
+    const { defaultDocxSerializer, writeDocx } = await import('prosemirror-docx');
+    const { Packer } = await import('docx');
     const wordDocument = defaultDocxSerializer.serialize(editor.state.doc, {
       getImageBuffer: () => Buffer.from([]),
     });
