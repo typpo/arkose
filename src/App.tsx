@@ -30,7 +30,7 @@ function App() {
       }),
       aiKeyboardShortcut,
     ],
-    content: store.get('documentContents', 'Hello world!'),
+    content: store.get('documentContents', ''),
     autofocus: 'end',
   });
   if (!editor) {
