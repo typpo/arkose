@@ -64,7 +64,7 @@ const aiKeyboardShortcut = Extension.create({
           const completion = await resp.json();
           toast.dismiss(loadingToast);
           editor.setEditable(true);
-          const completedText = completion.choices[0].text;
+          const completedText = completion.choices[0].text as string | null;
           if (!completedText?.trim()) {
             toast.error("The AI didn't have anything to say. Try writing a bit more.", {
               hideProgressBar: true,
