@@ -58,9 +58,13 @@ const aiKeyboardShortcut = Extension.create({
             return;
           }
           console.log(`completion "${completedText}"`);
+          const paragraphTexts = completedText.trim().split(/\n\n/g);
           const shouldAddSpace = !before.endsWith(' ') && !before.endsWith('\n');
-          console.log('shouldAddSpace?', shouldAddSpace);
-          editor.commands.insertContent((shouldAddSpace ? ' ' : '') + completedText.trim());
+          if (shouldAddSpace) {
+            paragraphTexts[0] = paragraphTexts + ' ';
+          }
+          const nodes = paragraphTexts.map(text => ({type: 'paragraph', content: [{type: 'text', text,}]}));
+          editor.commands.insertContent(nodes);
         }
         run();
         return true;
