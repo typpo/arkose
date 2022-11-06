@@ -19,7 +19,7 @@
   align-items: center;
   max-width: calc(1024px + 8rem * 2);
   margin: 0 auto;
-  gap: 3rem;
+  gap: 1.5rem;
 }
 
 .menuTopLevel {
