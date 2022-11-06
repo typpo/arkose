@@ -34,7 +34,7 @@ function App() {
     autofocus: 'end',
   });
   if (!editor) {
-    return <div>Something has gone terribly wrong, please try again later.</div>;
+    return <div>Loading...</div>;
   }
 
   editor.on(

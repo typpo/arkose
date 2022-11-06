@@ -1,5 +1,6 @@
 venv
 .env.local
+.dev.vars
 
 ### Vim ###
 [._]*.s[a-w][a-z]

@@ -1,7 +1,6 @@
 import store from 'store';
 import { Schema, Node as ProseMirrorNode } from 'prosemirror-model';
 import { Extension, getText, getTextSerializersFromSchema } from '@tiptap/core';
-import { Configuration, OpenAIApi } from 'openai';
 import { toast } from 'react-toastify';
 
 import Config from './config';
@@ -39,22 +38,33 @@ const aiKeyboardShortcut = Extension.create({
 
           editor.setEditable(false);
           const loadingToast = toast.loading('Generating text...');
-          const configuration = new Configuration({
-            apiKey: Config.OpenAI.apiKey || store.get('openAiApiKey'),
+
+          const apiKey = Config.OpenAI.apiKey || store.get('openAiApiKey');
+          const apiUrl =
+            !apiKey || apiKey === 'YOUR_API_KEY'
+              ? '/api/complete'
+              : 'https://api.openai.com/v1/completions';
+          const resp = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+              model: 'text-davinci-002',
+              prompt: before,
+              suffix: after.trim() ? after : undefined,
+              max_tokens: Number(store.get('openAiMaxTokens')) || 256,
+              temperature: Number(store.get('openAiTemperature')) || 0.7,
+              best_of: 1,
+              presence_penalty: 0,
+            }),
           });
-          const openai = new OpenAIApi(configuration);
-          const completion = await openai.createCompletion({
-            model: 'text-davinci-002',
-            prompt: before.trim(),
-            suffix: after.trim() ? after.trim() : undefined,
-            max_tokens: Number(store.get('openAiMaxTokens')) || 256,
-            temperature: Number(store.get('openAiTemperature')) || 0.7,
-            best_of: 1,
-            presence_penalty: 0,
-          });
+
+          const completion = await resp.json();
           toast.dismiss(loadingToast);
           editor.setEditable(true);
-          const completedText = completion.data.choices[0].text;
+          const completedText = completion.choices[0].text;
           if (!completedText?.trim()) {
             toast.error("The AI didn't have anything to say. Try writing a bit more.", {
               hideProgressBar: true,
@@ -69,7 +79,10 @@ const aiKeyboardShortcut = Extension.create({
           if (shouldAddSpace) {
             paragraphTexts[0] = paragraphTexts[0] + ' ';
           }
-          const nodes = paragraphTexts.map(text => ({type: 'paragraph', content: [{type: 'text', text,}]}));
+          const nodes = paragraphTexts.map((text) => ({
+            type: 'paragraph',
+            content: [{ type: 'text', text }],
+          }));
           console.log('nodes', nodes);
           editor.commands.insertContent(nodes);
         }
