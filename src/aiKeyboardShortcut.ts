@@ -25,7 +25,9 @@ const aiKeyboardShortcut = Extension.create({
         async function run() {
           // TODO(ian): Handle selections
           const pos = editor.state.selection.$anchor.pos;
-          const before = getTextFromDocument(editor.schema, editor.state.doc.cut(0, pos));
+          const numLookback = Number(store.get('openAiLookbackTokens'));
+          const start = numLookback ? Math.max(0, pos - numLookback) : 0;
+          const before = getTextFromDocument(editor.schema, editor.state.doc.cut(start, pos));
           const after = getTextFromDocument(
             editor.schema,
             editor.state.doc.cut(pos, editor.state.doc.content.size),

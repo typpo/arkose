@@ -11,10 +11,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import store from 'store';
 
 export default function Settings({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [apiKey, setApiKey] = React.useState<string>(store.get('apiKey') || 'YOUR_API_KEY');
-  const [MaxTokens, setMaxTokens] = React.useState<number>(store.get('MaxTokens') || 256);
-  const [temperature, setTemperature] = React.useState<number>(store.get('temperature') || 0.7);
+  const [apiKey, setApiKey] = React.useState<string>(store.get('openAiApiKey') || 'YOUR_API_KEY');
+  const [lookbackTokens, setLookbackTokens] = React.useState<number>(store.get('openAiLookbackTokens') || 800);
+  const [maxTokens, setMaxTokens] = React.useState<number>(store.get('openAiMaxTokens') || 256);
+  const [temperature, setTemperature] = React.useState<number>(store.get('openAiTemperature') || 0.7);
 
+  const [hasErrorLookbackTokens, setHasErrorLookbackTokens] = React.useState<boolean>(false);
   const [hasErrorMaxTokens, setHasErrorMaxTokens] = React.useState<boolean>(false);
   const [hasErrorTemperature, setHasErrorTemperature] = React.useState<boolean>(false);
 
@@ -50,6 +52,31 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
             autoFocus
             margin="dense"
             id="name"
+            label="Max lookback tokens"
+            helperText="Approx. maximum number of tokens to provide as context to the AI (up to 4000)"
+            type="number"
+            InputProps={{ inputProps: { min: 1, max: 4000 } }}
+            fullWidth
+            variant="standard"
+            error={hasErrorLookbackTokens}
+            onChange={(e) => {
+              const newVal = parseInt(e.target.value, 10);
+              if (!isNaN(newVal) && newVal >= 1 && newVal <= 4000) {
+                store.set('openAiLookbackTokens', newVal);
+                setHasErrorLookbackTokens(false);
+              } else {
+                setHasErrorLookbackTokens(true);
+              }
+              setLookbackTokens(newVal);
+            }}
+            value={lookbackTokens}
+          />
+        </Box>
+        <Box marginBottom={4}>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
             label="Max tokens"
             helperText="Maximum number of tokens to generate (up to 4000)"
             type="number"
@@ -67,7 +94,7 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
               }
               setMaxTokens(newVal);
             }}
-            value={MaxTokens}
+            value={maxTokens}
           />
         </Box>
         <Box marginBottom={4}>
