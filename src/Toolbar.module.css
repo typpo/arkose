@@ -23,3 +23,15 @@
   margin: 0 auto;
   gap: 3rem;
 }
+
+@media (max-width: 1024px) {
+  .gutter {
+    padding: 0 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .gutter {
+    padding: 0 0.5rem;
+  }
+}
