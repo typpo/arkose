@@ -32,8 +32,10 @@ const aiKeyboardShortcut = Extension.create({
             editor.schema,
             editor.state.doc.cut(pos, editor.state.doc.content.size),
           );
-          console.log(`Before: "${before}"`);
-          console.log(`After: "${after}"`);
+          console.log('%c Text before:', 'font-size: 18px; font-weight: bold');
+          console.log(before);
+          console.log('%c Text after:', 'font-size: 18px; font-weight: bold');
+          console.log(after);
 
           editor.setEditable(false);
           const loadingToast = toast.loading('Generating text...');
@@ -59,13 +61,16 @@ const aiKeyboardShortcut = Extension.create({
             });
             return;
           }
-          console.log(`completion "${completedText}"`);
+
+          console.log('%c Completion:', 'font-size: 18px; font-weight: bold');
+          console.log(completedText);
           const paragraphTexts = completedText.trim().split(/\n\n/g);
           const shouldAddSpace = !before.endsWith(' ') && !before.endsWith('\n');
           if (shouldAddSpace) {
-            paragraphTexts[0] = paragraphTexts + ' ';
+            paragraphTexts[0] = paragraphTexts[0] + ' ';
           }
           const nodes = paragraphTexts.map(text => ({type: 'paragraph', content: [{type: 'text', text,}]}));
+          console.log('nodes', nodes);
           editor.commands.insertContent(nodes);
         }
         run();

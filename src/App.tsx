@@ -52,12 +52,12 @@ function App() {
 
   return (
     <div className={styles.app}>
+      <ToastContainer />
       <NavMenu editor={editor} onCreateNewDocument={handleNewDocument} saved={false} />
       <Toolbar editor={editor} />
       <div className={styles.documentContainer}>
         <Document editor={editor} />
       </div>
-      <ToastContainer />
     </div>
   );
 }
