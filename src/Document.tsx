@@ -11,12 +11,8 @@ interface DocumentProps {
 }
 
 export default function Document({ editor }: DocumentProps) {
-  const handleClick = (event: React.MouseEvent) => {
-    editor.commands.focus('end');
-  };
-
   return (
-    <div className={styles.container} onClick={handleClick}>
+    <div className={styles.container}>
       <EditorContent
         // @ts-ignore: Known issue https://github.com/ueberdosis/tiptap/issues/1344
         editor={editor}

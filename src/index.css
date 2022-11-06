@@ -20,6 +20,10 @@ body {
   transition-duration: 0s !important;
 }
 
+.ProseMirror {
+  min-height: 100vh;
+}
+
 .ProseMirror-focused {
   outline: none;
 }
