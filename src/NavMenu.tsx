@@ -37,6 +37,33 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
     handleClose();
   };
 
+  const handleOpenDocument = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json,application/json';
+    input.click();
+    input.onchange = (e: Event) => {
+      const files = (e?.target as HTMLInputElement)?.files;
+      if (!files) {
+        return;
+      }
+      const file = files[0];
+      if (!file) {
+        return;
+      }
+      const reader = new FileReader();
+      reader.readAsText(file, 'utf-8');
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        const text = e?.target?.result;
+        if (!text) {
+          return;
+        }
+        editor.commands.setContent(JSON.parse(text as string));
+      };
+    };
+    handleClose();
+  };
+
   const handleSaveHtml = () => {
     const html = editor.getHTML();
     const htmlStyles = `<style>
@@ -82,6 +109,11 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
     handleClose();
   };
 
+  const handleSaveJson = () => {
+    saveAs(new Blob([JSON.stringify(editor.getJSON())]), 'document.json');
+    handleClose();
+  };
+
   return (
     <div className={styles.navbar}>
       <div className={styles.gutter}>
@@ -105,10 +137,12 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
             }}
           >
             <MenuItem onClick={handleCreateNewDocument}>New document</MenuItem>
+            <MenuItem onClick={handleOpenDocument}>Open JSON</MenuItem>
             <Divider />
             <MenuItem onClick={handleSaveHtml}>Save as HTML</MenuItem>
             <MenuItem onClick={handleSaveMarkdown}>Save as Markdown</MenuItem>
             <MenuItem onClick={handleSaveDocx}>Save as DOCX</MenuItem>
+            <MenuItem onClick={handleSaveJson}>Save as JSON</MenuItem>
           </Menu>
           <div
             id="settings-menu"
