@@ -18,6 +18,7 @@ export default function Document({ editor }: DocumentProps) {
   return (
     <div className={styles.container} onClick={handleClick}>
       <EditorContent
+        // @ts-ignore: Known issue https://github.com/ueberdosis/tiptap/issues/1344
         editor={editor}
         onClick={(e) => {
           e.stopPropagation();
