@@ -1,39 +1,33 @@
 import React from 'react';
 
-import * as quillToWord from 'quill-to-word';
 import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Turndown from 'turndown';
 import { saveAs } from 'file-saver';
+import { defaultDocxSerializer, writeDocx } from 'prosemirror-docx';
+import { Packer } from 'docx';
 import { ToastContainer, toast } from 'react-toastify';
 
 import Settings from './Settings';
 
-import type ReactQuill from 'react-quill';
-import type { DeltaStatic as QuillDelta } from 'quill';
+import type { Editor } from '@tiptap/core';
 
 import styles from './NavMenu.module.css';
 
 interface NavMenuProps {
-  quillRef: React.MutableRefObject<ReactQuill | null>;
-  docContents: QuillDelta | null;
+  editor: Editor;
   onCreateNewDocument: () => void;
   saved: boolean;
 }
 
-export default function NavMenu({
-  docContents,
-  saved,
-  onCreateNewDocument,
-  quillRef,
-}: NavMenuProps) {
+export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuProps) {
   const [settingsOpen, setSettingsOpen] = React.useState<boolean>(false);
   const [fileAnchorEl, setFileAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClose = () => {
     setFileAnchorEl(null);
-    quillRef.current?.focus();
+    editor.commands.focus();
   };
 
   const handleCreateNewDocument = () => {
@@ -47,11 +41,7 @@ export default function NavMenu({
   };
 
   const handleSaveHtml = () => {
-    const html = quillRef.current?.editor?.root.innerHTML;
-    if (!html || !docContents || !docContents.ops) {
-      toast.error('Cowardly refusing to save an empty document');
-      return;
-    }
+    const html = editor.getHTML();
     const htmlStyles = `<style>
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
@@ -77,29 +67,18 @@ export default function NavMenu({
   };
 
   const handleSaveMarkdown = () => {
-    const html = quillRef.current?.editor?.root.innerHTML;
-    if (!html || !docContents || !docContents.ops) {
-      toast.error('Cowardly refusing to save an empty document');
-      return;
-    }
+    const html = editor.getHTML();
     const md = new Turndown().turndown(html);
     saveAs(new Blob([md]), 'document.md');
     handleClose();
   };
 
   const handleSaveDocx = async () => {
-    if (!docContents || !docContents.ops) {
-      toast.error('Cowardly refusing to save an empty document');
-      return;
-    }
-
-    // @ts-expect-error: It works
-    const docAsBlob = await quillToWord.generateWord(docContents, {
-      exportAs: 'blob',
+    const wordDocument = defaultDocxSerializer.serialize(editor.state.doc, {
+      getImageBuffer: () => Buffer.from([]),
     });
 
-    // @ts-expect-error: It works
-    saveAs(docAsBlob, 'document.docx');
+    saveAs(await Packer.toBlob(wordDocument), 'document.docx');
     handleClose();
   };
 

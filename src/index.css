@@ -22,10 +22,23 @@ body {
   transition-duration: 0s !important;
 }
 
-.ql-editor {
-  line-height: 1.8;
+.ProseMirror-focused {
+  outline: none;
 }
 
-.ql-editor p {
-  margin: 1rem 0;
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+  line-height: 1.2;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }

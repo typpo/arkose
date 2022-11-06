@@ -8,10 +8,6 @@
   box-shadow: 0 1px 3px 1px rgb(60 64 67 / 15%);
 }
 
-.editor > div {
-  font-size: 18px;
-}
-
 @media (max-width: 1024px) {
   .container {
     padding: 4rem;

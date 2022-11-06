@@ -1,0 +1,25 @@
+.toolbar {
+  position: fixed;
+  top: 3rem; /* match navmenu height */
+  left: 0;
+  width: 100%;
+
+  background-color: #fff;
+  border-top: 1px solid #dadce0;
+  border-bottom: 1px solid #dadce0;
+  z-index: 1;
+}
+
+/* Gutter and actions match navmenu */
+.gutter {
+  padding: 0 6rem;
+}
+
+.actions {
+  height: 2em;
+  display: flex;
+  align-items: center;
+  max-width: calc(1024px + 8rem * 2);
+  margin: 0 auto;
+  gap: 3rem;
+}

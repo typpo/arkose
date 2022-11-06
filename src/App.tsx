@@ -1,53 +1,63 @@
-import React from 'react';
-
-import Document from './Document';
-import NavMenu from './NavMenu';
 import store from 'store';
 import debounce from 'debounce';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import Link from '@tiptap/extension-link';
+import Placeholder from '@tiptap/extension-placeholder';
+import { useEditor } from '@tiptap/react';
+import { ToastContainer } from 'react-toastify';
 
-import type ReactQuill from 'react-quill';
-import type { DeltaStatic as QuillDelta } from 'quill';
+import Document from './Document';
+import Toolbar from './Toolbar';
+import NavMenu from './NavMenu';
+import aiKeyboardShortcut from './aiKeyboardShortcut';
 
+import 'react-toastify/dist/ReactToastify.css';
 import styles from './App.module.css';
 
 function App() {
-  const quillRef = React.useRef<ReactQuill>(null);
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      Link.configure({
+        openOnClick: true,
+      }),
+      Placeholder.configure({
+        placeholder: `Start writing... then press ${
+          window.navigator.platform.startsWith('Mac') ? 'Cmd' : 'Ctrl'
+        }+Enter to generate text with AI`,
+      }),
+      aiKeyboardShortcut,
+    ],
+    content: store.get('documentContents', 'Hello world!'),
+    autofocus: 'end',
+  });
+  if (!editor) {
+    return <div>Something has gone terribly wrong, please try again later.</div>;
+  }
 
-  const [contents, setContents] = React.useState<QuillDelta | null>(
-    store.get('documentContents', null),
+  editor.on(
+    'update',
+    debounce(() => {
+      const content = editor.getJSON();
+      store.set('documentContents', content);
+    }, 100),
   );
-  const [saved, setSaved] = React.useState<boolean>(true);
-
-  React.useEffect(() => {
-    quillRef.current?.focus();
-  }, []);
-
-  const handleChange = (html: string, delta: QuillDelta) => {
-    setSaved(false);
-    setContents(delta);
-    doHandleDeltaChange(html, delta);
-  };
-
-  const doHandleDeltaChange = debounce((html: string, delta: QuillDelta) => {
-    store.set('documentContents', delta);
-    setSaved(true);
-  }, 100);
 
   const handleNewDocument = () => {
-    setContents(null);
+    editor.commands.setContent('');
+    editor.commands.focus(0);
   };
 
   return (
     <div className={styles.app}>
-      <NavMenu
-        quillRef={quillRef}
-        docContents={contents}
-        onCreateNewDocument={handleNewDocument}
-        saved={saved}
-      />
+      <NavMenu editor={editor} onCreateNewDocument={handleNewDocument} saved={false} />
+      <Toolbar editor={editor} />
       <div className={styles.documentContainer}>
-        <Document quillRef={quillRef} quillDelta={contents} onChange={handleChange} />
+        <Document editor={editor} />
       </div>
+      <ToastContainer />
     </div>
   );
 }
