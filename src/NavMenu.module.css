@@ -24,8 +24,9 @@
 
 .brand {
   margin-left: auto;
-  font-size: 10px;
+  font-size: 9pt;
   opacity: 0.5;
+  margin-top: 4px;
 }
 
 .brand img {
