@@ -122,60 +122,64 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
     <div className={styles.navbar}>
       <div className={styles.gutter}>
         <div className={styles.menus}>
-          <div
-            id="file-menu"
-            className={styles.menuTopLevel}
-            onClick={(event) =>
-              fileAnchorEl ? setFileAnchorEl(null) : setFileAnchorEl(event.currentTarget)
-            }
-          >
-            File
+          <div className={styles.menuLeft}>
+            <div
+              id="file-menu"
+              className={styles.menuTopLevel}
+              onClick={(event) =>
+                fileAnchorEl ? setFileAnchorEl(null) : setFileAnchorEl(event.currentTarget)
+              }
+            >
+              File
+            </div>
+            <Menu
+              elevation={2}
+              anchorEl={fileAnchorEl}
+              open={!!fileAnchorEl}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'file-menu',
+              }}
+            >
+              <MenuItem onClick={handleCreateNewDocument}>New document</MenuItem>
+              <MenuItem onClick={handleOpenDocument}>Open JSON</MenuItem>
+              <Divider />
+              <MenuItem onClick={handleSaveHtml}>Save as HTML</MenuItem>
+              <MenuItem onClick={handleSaveMarkdown}>Save as Markdown</MenuItem>
+              <MenuItem onClick={handleSaveDocx}>Save as DOCX</MenuItem>
+              <MenuItem onClick={handleSaveJson}>Save as JSON</MenuItem>
+            </Menu>
+            <div
+              id="settings-menu"
+              className={styles.menuTopLevel}
+              onClick={() => setSettingsOpen(true)}
+            >
+              Settings
+            </div>
+            <Settings
+              open={settingsOpen}
+              onClose={() => {
+                setSettingsOpen(false);
+                handleClose();
+              }}
+            />
+            <div id="stats-menu" className={styles.menuTopLevel} onClick={() => setStatsOpen(true)}>
+              Stats
+            </div>
+            <Stats
+              editor={editor}
+              open={statsOpen}
+              onClose={() => {
+                setStatsOpen(false);
+                handleClose();
+              }}
+            />
           </div>
-          <Menu
-            elevation={2}
-            anchorEl={fileAnchorEl}
-            open={!!fileAnchorEl}
-            onClose={handleClose}
-            MenuListProps={{
-              'aria-labelledby': 'file-menu',
-            }}
-          >
-            <MenuItem onClick={handleCreateNewDocument}>New document</MenuItem>
-            <MenuItem onClick={handleOpenDocument}>Open JSON</MenuItem>
-            <Divider />
-            <MenuItem onClick={handleSaveHtml}>Save as HTML</MenuItem>
-            <MenuItem onClick={handleSaveMarkdown}>Save as Markdown</MenuItem>
-            <MenuItem onClick={handleSaveDocx}>Save as DOCX</MenuItem>
-            <MenuItem onClick={handleSaveJson}>Save as JSON</MenuItem>
-          </Menu>
-          <div
-            id="settings-menu"
-            className={styles.menuTopLevel}
-            onClick={() => setSettingsOpen(true)}
-          >
-            Settings
-          </div>
-          <Settings
-            open={settingsOpen}
-            onClose={() => {
-              setSettingsOpen(false);
-              handleClose();
-            }}
-          />
-          <div id="stats-menu" className={styles.menuTopLevel} onClick={() => setStatsOpen(true)}>
-            Stats
-          </div>
-          <Stats
-            editor={editor}
-            open={statsOpen}
-            onClose={() => {
-              setStatsOpen(false);
-              handleClose();
-            }}
-          />
-          <div className={styles.brand}>
-            Arkose AI
-            <img src={Logo} alt="Arkose AI logo" />
+          <div className={styles.menuRight}>
+            <div className={styles.brand}>
+              Arkose AI
+              <img src={Logo} alt="Arkose AI logo" />
+            </div>
           </div>
           {/*
         <div className={styles.saveStatus}>

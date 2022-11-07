@@ -59,7 +59,11 @@ export default function Toolbar({ editor }: ToolbarProps) {
         <div className={styles.actions}>
           <Stack direction="row" spacing={1}>
             <TextField
-              sx={{ width: '10ch', '& fieldset': { border: 'none' } }}
+              sx={{
+                width: '10ch',
+                marginLeft: '-14px',
+                '& fieldset': { border: 'none' },
+              }}
               select
               value={isCodeActive ? FONT_FAMILIES[2].value : activeFontFamily}
               onChange={(e) => editor.chain().focus().setFontFamily(e.target.value).run()}
@@ -77,7 +81,7 @@ export default function Toolbar({ editor }: ToolbarProps) {
               ))}
             </TextField>
             <TextField
-              sx={{ width: '14ch', '& fieldset': { border: 'none' }, 'align-self': 'center' }}
+              sx={{ width: '14ch', '& fieldset': { border: 'none' } }}
               select
               value={activeHeading}
               onChange={(e) => {

@@ -14,16 +14,20 @@
 }
 
 .menus {
-  height: 3em;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  height: 3em;
   max-width: calc(1024px + 8rem * 2);
   margin: 0 auto;
+}
+
+.menuLeft {
+  display: flex;
   gap: 1.5rem;
 }
 
 .brand {
-  margin-left: auto;
   font-size: 9pt;
   opacity: 0.5;
   margin-top: 4px;
