@@ -44,3 +44,11 @@ body {
   height: 0;
   pointer-events: none;
 }
+
+.ProseMirror blockquote {
+  border-left: 4px solid #e9ecef;
+  color: #6c757d;
+  font-style: italic;
+  margin: 0;
+  padding: 0 1em;
+}
