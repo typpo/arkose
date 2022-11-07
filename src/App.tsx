@@ -3,6 +3,9 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
+import TextAlign from '@tiptap/extension-text-align';
+import TextStyle from '@tiptap/extension-text-style';
+import FontFamily from '@tiptap/extension-font-family';
 import { useEditor } from '@tiptap/react';
 import { ToastContainer } from 'react-toastify';
 
@@ -23,6 +26,11 @@ function App() {
     extensions: [
       StarterKit,
       Underline,
+      TextStyle,
+      FontFamily,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
       Link.configure({
         openOnClick: true,
       }),

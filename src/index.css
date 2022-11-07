@@ -52,3 +52,19 @@ body {
   margin: 0;
   padding: 0 1em;
 }
+
+.ProseMirror code {
+  background-color: #f8f9fa;
+  border-radius: 3px;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.9em;
+  padding: 0 0.2em;
+}
+
+.ProseMirror pre {
+  background-color: #f8f9fa;
+  border-radius: 3px;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.9em;
+  padding: 1em;
+}

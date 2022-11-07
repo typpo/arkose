@@ -578,6 +578,11 @@
     prosemirror-view "^1.28.2"
     tippy.js "^6.3.7"
 
+"@tiptap/extension-font-family@^2.0.0-beta.202":
+  version "2.0.0-beta.202"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-font-family/-/extension-font-family-2.0.0-beta.202.tgz#f5b561a79e7562e2c6f12f2cd1484a4c38740b82"
+  integrity sha512-vxRFyCULuaZOqeW/heAc7fL+LgAmuxUyScdWFxnWEBxwzHn0U1L29evr8SC7Vwo7TowV/u9+6lgCeoP7GuKq1g==
+
 "@tiptap/extension-gapcursor@^2.0.0-beta.202":
   version "2.0.0-beta.202"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-gapcursor/-/extension-gapcursor-2.0.0-beta.202.tgz#567fb6281068db7fb5da2092550e83e01530d8cf"
@@ -651,6 +656,16 @@
   version "2.0.0-beta.202"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-strike/-/extension-strike-2.0.0-beta.202.tgz#8bf200fb044e5b2401edef26e26920b94ab35249"
   integrity sha512-cs87UI/VTkmSfIwlHpm7nAPXok2bAQvxmNJ1y7UPzTATVl+ixP1F4aIkwiYk+X7rE/Sys+09PGg1Pr1shwUUkQ==
+
+"@tiptap/extension-text-align@^2.0.0-beta.202":
+  version "2.0.0-beta.202"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-text-align/-/extension-text-align-2.0.0-beta.202.tgz#37c73e884fb0d9ebe2a519d398b2da52672b7a4b"
+  integrity sha512-cB5SBKRTn730BBwtPQaKfc7uYgI7bGuD1UbsdF8UY93vIsRjdRO4McNlvgfDrb8WrD460PsOOXx18YwX1+3T/Q==
+
+"@tiptap/extension-text-style@^2.0.0-beta.202":
+  version "2.0.0-beta.202"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-text-style/-/extension-text-style-2.0.0-beta.202.tgz#73706d44434787a88ddd2cbc5feb17cb48cd26cd"
+  integrity sha512-dTA3rdkSkANGXtObNEEk7h6+pEOP4iANZF8D0RiNK+c5dKpCfKswVAuddm5q2PMcgYgep5bv/sorAqOIire2rQ==
 
 "@tiptap/extension-text@^2.0.0-beta.202":
   version "2.0.0-beta.202"

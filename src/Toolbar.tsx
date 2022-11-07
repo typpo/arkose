@@ -1,3 +1,5 @@
+import React from 'react';
+
 import BoldIcon from '@mui/icons-material/FormatBold';
 import ItalicIcon from '@mui/icons-material/FormatItalic';
 import UnderlineIcon from '@mui/icons-material/FormatUnderlined';
@@ -5,26 +7,98 @@ import FormatClearIcon from '@mui/icons-material/FormatClear';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
+import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
+import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
+import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import LinkIcon from '@mui/icons-material/Link';
+import TextField from '@mui/material/TextField';
 //import LinkOffIcon from '@mui/icons-material/LinkOff';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 
-import type { Editor } from '@tiptap/core';
+import type { Editor, Level } from '@tiptap/core';
 
 import styles from './Toolbar.module.css';
+import { MenuItem } from '@mui/material';
 
 interface ToolbarProps {
   editor: Editor;
 }
 
+const FONT_FAMILIES = [
+  { label: 'Sans', value: 'Arial, Helvetica, sans-serif' },
+  { label: 'Serif', value: 'Georgia, serif' },
+  { label: 'Mono', value: 'Courier New, Courier, monospace' },
+];
+
+const FONT_SIZE_TYPES = [
+  { label: 'Normal', value: -1 },
+  { label: 'Heading 1', value: 1 },
+  { label: 'Heading 2', value: 2 },
+  { label: 'Heading 3', value: 3 },
+  { label: 'Heading 4', value: 4 },
+  { label: 'Heading 5', value: 5 },
+  { label: 'Heading 6', value: 6 },
+];
+
 export default function Toolbar({ editor }: ToolbarProps) {
   // Reference: https://tiptap.dev/installation/react#5-the-complete-setup
+  // TODO(ian): Add tooltips with keyboard shortcuts
+
+  const [fontFamily, setFontFamily] = React.useState<string>(FONT_FAMILIES[0].value);
+
+  React.useEffect(() => {
+    editor.chain().focus().setFontFamily(fontFamily).run();
+  }, [fontFamily]);
+
+  const activeNode = editor.state.selection.$head.parent;
+  const activeHeading = activeNode.type.name === 'heading' ? activeNode.attrs.level : -1;
+
   return (
     <div className={styles.toolbar}>
       <div className={styles.gutter}>
         <div className={styles.actions}>
           <Stack direction="row" spacing={1}>
+            <TextField
+              sx={{ width: '10ch', '& fieldset': { border: 'none' }, 'align-self': 'center' }}
+              select
+              value={fontFamily}
+              onChange={(e) => setFontFamily(e.target.value)}
+              size="small"
+            >
+              {FONT_FAMILIES.map((option) => (
+                <MenuItem
+                  key={option.value}
+                  value={option.value}
+                  style={{ fontFamily: option.value }}
+                >
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              sx={{ width: '14ch', '& fieldset': { border: 'none' }, 'align-self': 'center' }}
+              select
+              value={activeHeading}
+              onChange={(e) => {
+                const level = Number(e.target.value) as Level;
+                editor.chain().focus().toggleHeading({ level }).run();
+              }}
+              size="small"
+            >
+              {FONT_SIZE_TYPES.map((option) => (
+                <MenuItem
+                  key={option.value}
+                  value={option.value}
+                  style={{
+                    fontSize: option.value === -1 ? undefined : 17 + (10 - 2 * option.value),
+                    fontWeight: option.value === -1 ? undefined : 'bold',
+                  }}
+                >
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
             <IconButton
               edge="start"
               aria-label="bold"
@@ -52,7 +126,9 @@ export default function Toolbar({ editor }: ToolbarProps) {
             </IconButton>
             <IconButton
               aria-label="clear format"
-              onClick={() => editor.chain().focus().unsetAllMarks().setParagraph().run()}
+              onClick={() =>
+                editor.chain().focus().unsetAllMarks().unsetFontFamily().setParagraph().run()
+              }
             >
               <FormatClearIcon />
             </IconButton>
@@ -98,6 +174,30 @@ export default function Toolbar({ editor }: ToolbarProps) {
               color={editor.isActive('link') ? 'primary' : 'default'}
             >
               <LinkIcon />
+            </IconButton>
+            <IconButton
+              aria-label="align left"
+              onClick={() => editor.chain().focus().setTextAlign('left').run()}
+              disabled={!editor.can().chain().focus().setTextAlign('left').run()}
+              //color={editor.isActive({ textAlign: 'left' }) ? 'primary' : 'default'}
+            >
+              <FormatAlignLeftIcon />
+            </IconButton>
+            <IconButton
+              aria-label="align center"
+              onClick={() => editor.chain().focus().setTextAlign('center').run()}
+              disabled={!editor.can().chain().focus().setTextAlign('center').run()}
+              color={editor.isActive({ textAlign: 'center' }) ? 'primary' : 'default'}
+            >
+              <FormatAlignCenterIcon />
+            </IconButton>
+            <IconButton
+              aria-label="align right"
+              onClick={() => editor.chain().focus().setTextAlign('right').run()}
+              disabled={!editor.can().chain().focus().setTextAlign('right').run()}
+              color={editor.isActive({ textAlign: 'right' }) ? 'primary' : 'default'}
+            >
+              <FormatAlignRightIcon />
             </IconButton>
             {/*
             <IconButton
