@@ -3,7 +3,7 @@ import { Extension, getText, getTextSerializersFromSchema } from '@tiptap/core';
 import { toast } from 'react-toastify';
 import { snapshot } from 'valtio/vanilla';
 
-import { settingsStore, statsStore } from './stores';
+import { settingsStore, statsStore, userStore } from './stores';
 
 function getTextFromDocument(schema: Schema, node: ProseMirrorNode) {
   // https://github.com/ueberdosis/tiptap/blob/4851fc5e9b6daccc15a1839e471db489401eca0c/packages/core/src/Editor.ts#L428
@@ -24,6 +24,7 @@ const aiKeyboardShortcut = Extension.create({
         async function run() {
           const { apiKey, lookbackTokens, maxTokens, temperature } = snapshot(settingsStore);
           const { tokensUsed } = snapshot(statsStore);
+          const { uuid } = snapshot(userStore);
           // TODO(ian): Handle selections
           // TODO(ian): This relies on a hack that assumes the jotai atomWithStorage stores in a localStorage key with the same name as the atom.
           const pos = editor.state.selection.$anchor.pos;
@@ -60,6 +61,7 @@ const aiKeyboardShortcut = Extension.create({
               temperature: temperature,
               best_of: 1,
               presence_penalty: 0,
+              user: uuid,
             }),
           });
 

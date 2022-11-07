@@ -1,5 +1,6 @@
 import store from 'store';
 import { proxy, subscribe, useSnapshot } from 'valtio';
+import { v4 as uuidv4 } from 'uuid';
 
 import Config from './config';
 
@@ -36,4 +37,17 @@ export const documentStore = proxy<{ content: JSONContent | null }>(
 
 subscribe(documentStore, () => {
   store.set('document', documentStore);
+});
+
+let currentUser = store.get('user');
+if (!currentUser) {
+  currentUser = {
+    uuid: uuidv4(),
+  };
+  store.set('user', currentUser);
+}
+export const userStore = proxy(currentUser);
+
+subscribe(userStore, () => {
+  store.set('user', userStore);
 });
