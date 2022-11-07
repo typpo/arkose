@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -8,13 +7,27 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import store from 'store';
+import { useAtom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
+
+import Config from './config';
+
+import type { JSONContent } from '@tiptap/core';
+
+export const openAiApiKeyAtom = atomWithStorage(
+  'openAiApiKey',
+  Config.OpenAI.apiKey || 'YOUR_API_KEY',
+);
+export const openAiLookbackTokensAtom = atomWithStorage<number>('openAiLookbackTokens', 800);
+export const openAiMaxTokensAtom = atomWithStorage<number>('openAiMaxTokens', 256);
+export const openAiTemperatureAtom = atomWithStorage<number>('openAiTemperature', 0.7);
+export const documentContentsAtom = atomWithStorage<JSONContent | null>('documentContents', null);
 
 export default function Settings({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [apiKey, setApiKey] = React.useState<string>(store.get('openAiApiKey') || 'YOUR_API_KEY');
-  const [lookbackTokens, setLookbackTokens] = React.useState<number>(store.get('openAiLookbackTokens') || 800);
-  const [maxTokens, setMaxTokens] = React.useState<number>(store.get('openAiMaxTokens') || 256);
-  const [temperature, setTemperature] = React.useState<number>(store.get('openAiTemperature') || 0.7);
+  const [apiKey, setApiKey] = useAtom(openAiApiKeyAtom);
+  const [lookbackTokens, setLookbackTokens] = useAtom(openAiLookbackTokensAtom);
+  const [maxTokens, setMaxTokens] = useAtom(openAiMaxTokensAtom);
+  const [temperature, setTemperature] = useAtom(openAiTemperatureAtom);
 
   const [hasErrorLookbackTokens, setHasErrorLookbackTokens] = React.useState<boolean>(false);
   const [hasErrorMaxTokens, setHasErrorMaxTokens] = React.useState<boolean>(false);
@@ -42,7 +55,6 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
             error={!apiKey.trim()}
             onChange={(e) => {
               setApiKey(e.target.value);
-              store.set('openAiApiKey', e.target.value);
             }}
             value={apiKey}
           />
@@ -62,14 +74,13 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
             onChange={(e) => {
               const newVal = parseInt(e.target.value, 10);
               if (!isNaN(newVal) && newVal >= 1 && newVal <= 4000) {
-                store.set('openAiLookbackTokens', newVal);
+                setLookbackTokens(newVal);
                 setHasErrorLookbackTokens(false);
               } else {
                 setHasErrorLookbackTokens(true);
               }
-              setLookbackTokens(newVal);
             }}
-            value={lookbackTokens}
+            defaultValue={lookbackTokens}
           />
         </Box>
         <Box marginBottom={4}>
@@ -87,14 +98,13 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
             onChange={(e) => {
               const newVal = parseInt(e.target.value, 10);
               if (!isNaN(newVal) && newVal >= 1 && newVal <= 4000) {
-                store.set('openAiMaxTokens', newVal);
+                setMaxTokens(newVal);
                 setHasErrorMaxTokens(false);
               } else {
                 setHasErrorMaxTokens(true);
               }
-              setMaxTokens(newVal);
             }}
-            value={maxTokens}
+            defaultValue={maxTokens}
           />
         </Box>
         <Box marginBottom={4}>
@@ -112,15 +122,13 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
             onChange={(e) => {
               const newVal = Number(e.target.value);
               if (!isNaN(newVal) && newVal >= 0 && newVal <= 1) {
-                store.set('openAiTemperature', newVal);
+                setTemperature(newVal);
                 setHasErrorTemperature(false);
               } else {
                 setHasErrorTemperature(true);
               }
-              setTemperature(newVal);
             }}
-            value={temperature}
-            defaultValue="0.7"
+            defaultValue={temperature}
           />
         </Box>
       </DialogContent>

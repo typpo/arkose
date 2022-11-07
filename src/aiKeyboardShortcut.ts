@@ -23,8 +23,10 @@ const aiKeyboardShortcut = Extension.create({
         const { editor } = this;
         async function run() {
           // TODO(ian): Handle selections
+          // TODO(ian): This relies on a hack that assumes the jotai atomWithStorage stores in a localStorage key with the same name as the atom.
           const pos = editor.state.selection.$anchor.pos;
           const numLookback = Number(store.get('openAiLookbackTokens'));
+          // FIXME this counts characters, not tokens
           const start = numLookback ? Math.max(0, pos - numLookback) : 0;
           const before = getTextFromDocument(editor.schema, editor.state.doc.cut(start, pos));
           const after = getTextFromDocument(

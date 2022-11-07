@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { useEditor, EditorContent } from '@tiptap/react';
+import { EditorContent } from '@tiptap/react';
 
 import type { Editor } from '@tiptap/core';
 
