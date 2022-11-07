@@ -9,14 +9,25 @@ import { useSnapshot } from 'valtio';
 
 import { statsStore } from './stores';
 
-export default function Stats({ open, onClose }: { open: boolean; onClose: () => void }) {
+import type { Editor } from '@tiptap/core';
+
+export default function Stats({
+  open,
+  onClose,
+  editor,
+}: {
+  open: boolean;
+  onClose: () => void;
+  editor: Editor;
+}) {
   const { tokensUsed } = useSnapshot(statsStore);
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>OpenAI GPT-3 Settings</DialogTitle>
+      <DialogTitle>Stats</DialogTitle>
       <DialogContent>
         <Box marginBottom={4}>
-          <DialogContentText>Tokens used: {tokensUsed}</DialogContentText>
+          <DialogContentText>Word count: {editor.getText().split(/\s/).length}</DialogContentText>
+          <DialogContentText>OpenAI tokens used: {tokensUsed}</DialogContentText>
           <DialogContentText>
             Cost estimate: ${((tokensUsed / 1000.0) * 0.02).toFixed(2)}
           </DialogContentText>

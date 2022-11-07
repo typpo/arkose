@@ -151,7 +151,7 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
           <div
             id="settings-menu"
             className={styles.menuTopLevel}
-            onClick={(event) => setSettingsOpen(true)}
+            onClick={() => setSettingsOpen(true)}
           >
             Settings
           </div>
@@ -162,14 +162,11 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
               handleClose();
             }}
           />
-          <div
-            id="stats-menu"
-            className={styles.menuTopLevel}
-            onClick={(event) => setStatsOpen(true)}
-          >
+          <div id="stats-menu" className={styles.menuTopLevel} onClick={() => setStatsOpen(true)}>
             Stats
           </div>
           <Stats
+            editor={editor}
             open={statsOpen}
             onClose={() => {
               setStatsOpen(false);
