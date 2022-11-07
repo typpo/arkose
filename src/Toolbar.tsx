@@ -16,7 +16,8 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 
-import type { Editor, Level } from '@tiptap/core';
+import type { Editor } from '@tiptap/core';
+import type { Level } from '@tiptap/extension-heading';
 
 import styles from './Toolbar.module.css';
 import { MenuItem } from '@mui/material';
