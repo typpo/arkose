@@ -1,9 +1,9 @@
-import store from 'store';
 import { Schema, Node as ProseMirrorNode } from 'prosemirror-model';
 import { Extension, getText, getTextSerializersFromSchema } from '@tiptap/core';
 import { toast } from 'react-toastify';
+import { snapshot } from 'valtio/vanilla';
 
-import Config from './config';
+import { settingsStore, statsStore } from './stores';
 
 function getTextFromDocument(schema: Schema, node: ProseMirrorNode) {
   // https://github.com/ueberdosis/tiptap/blob/4851fc5e9b6daccc15a1839e471db489401eca0c/packages/core/src/Editor.ts#L428
@@ -22,12 +22,13 @@ const aiKeyboardShortcut = Extension.create({
       'Mod-Enter': () => {
         const { editor } = this;
         async function run() {
+          const { apiKey, lookbackTokens, maxTokens, temperature } = snapshot(settingsStore);
+          const { tokensUsed } = snapshot(statsStore);
           // TODO(ian): Handle selections
           // TODO(ian): This relies on a hack that assumes the jotai atomWithStorage stores in a localStorage key with the same name as the atom.
           const pos = editor.state.selection.$anchor.pos;
-          const numLookback = Number(store.get('openAiLookbackTokens'));
           // FIXME this counts characters, not tokens
-          const start = numLookback ? Math.max(0, pos - numLookback) : 0;
+          const start = lookbackTokens ? Math.max(0, pos - lookbackTokens) : 0;
           const before = getTextFromDocument(editor.schema, editor.state.doc.cut(start, pos));
           const after = getTextFromDocument(
             editor.schema,
@@ -41,7 +42,6 @@ const aiKeyboardShortcut = Extension.create({
           editor.setEditable(false);
           const loadingToast = toast.loading('Generating text...');
 
-          const apiKey = Config.OpenAI.apiKey || store.get('openAiApiKey');
           const apiUrl =
             !apiKey || apiKey === 'YOUR_API_KEY'
               ? '/api/complete'
@@ -54,10 +54,10 @@ const aiKeyboardShortcut = Extension.create({
             },
             body: JSON.stringify({
               model: 'text-davinci-002',
-              prompt: before,
+              prompt: before.trim(),
               suffix: after.trim() ? after : undefined,
-              max_tokens: Number(store.get('openAiMaxTokens')) || 256,
-              temperature: Number(store.get('openAiTemperature')) || 0.7,
+              max_tokens: maxTokens,
+              temperature: temperature,
               best_of: 1,
               presence_penalty: 0,
             }),
@@ -77,16 +77,25 @@ const aiKeyboardShortcut = Extension.create({
           console.log('%c Completion:', 'font-size: 18px; font-weight: bold');
           console.log(completedText);
           const paragraphTexts = completedText.trim().split(/\n\n/g);
-          const shouldAddSpace = !before.endsWith(' ') && !before.endsWith('\n');
-          if (shouldAddSpace) {
+          if (!before.endsWith(' ') && !before.endsWith('\n')) {
+            // Add a space
             paragraphTexts[0] = paragraphTexts[0] + ' ';
           }
-          const nodes = paragraphTexts.map((text) => ({
+          let nodes = paragraphTexts.map((text) => ({
             type: 'paragraph',
             content: [{ type: 'text', text }],
           }));
+          if (!before.endsWith('\n') && !completedText.startsWith('\n')) {
+            // Insert the text in the current paragraph
+            editor.commands.insertContent(paragraphTexts[0]);
+            nodes = nodes.slice(1);
+          }
           console.log('nodes', nodes);
           editor.commands.insertContent(nodes);
+
+          const numTokensBefore = before.split(/\s/).length;
+          const generated = completedText.split(/\s/).length;
+          statsStore.tokensUsed = tokensUsed + generated;
         }
         run();
         return true;

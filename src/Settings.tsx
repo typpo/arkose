@@ -7,27 +7,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useAtom } from 'jotai';
-import { atomWithStorage } from 'jotai/utils';
 
-import Config from './config';
-
-import type { JSONContent } from '@tiptap/core';
-
-export const openAiApiKeyAtom = atomWithStorage(
-  'openAiApiKey',
-  Config.OpenAI.apiKey || 'YOUR_API_KEY',
-);
-export const openAiLookbackTokensAtom = atomWithStorage<number>('openAiLookbackTokens', 800);
-export const openAiMaxTokensAtom = atomWithStorage<number>('openAiMaxTokens', 256);
-export const openAiTemperatureAtom = atomWithStorage<number>('openAiTemperature', 0.7);
-export const documentContentsAtom = atomWithStorage<JSONContent | null>('documentContents', null);
+import { settingsStore } from './stores';
+import { useSnapshot } from 'valtio';
 
 export default function Settings({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [apiKey, setApiKey] = useAtom(openAiApiKeyAtom);
-  const [lookbackTokens, setLookbackTokens] = useAtom(openAiLookbackTokensAtom);
-  const [maxTokens, setMaxTokens] = useAtom(openAiMaxTokensAtom);
-  const [temperature, setTemperature] = useAtom(openAiTemperatureAtom);
+  const { apiKey, lookbackTokens, maxTokens, temperature } = useSnapshot(settingsStore);
 
   const [hasErrorLookbackTokens, setHasErrorLookbackTokens] = React.useState<boolean>(false);
   const [hasErrorMaxTokens, setHasErrorMaxTokens] = React.useState<boolean>(false);
@@ -54,7 +39,7 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
             variant="standard"
             error={!apiKey.trim()}
             onChange={(e) => {
-              setApiKey(e.target.value);
+              settingsStore.apiKey = e.target.value;
             }}
             value={apiKey}
           />
@@ -74,7 +59,7 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
             onChange={(e) => {
               const newVal = parseInt(e.target.value, 10);
               if (!isNaN(newVal) && newVal >= 1 && newVal <= 4000) {
-                setLookbackTokens(newVal);
+                settingsStore.lookbackTokens = newVal;
                 setHasErrorLookbackTokens(false);
               } else {
                 setHasErrorLookbackTokens(true);
@@ -98,7 +83,7 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
             onChange={(e) => {
               const newVal = parseInt(e.target.value, 10);
               if (!isNaN(newVal) && newVal >= 1 && newVal <= 4000) {
-                setMaxTokens(newVal);
+                settingsStore.maxTokens = newVal;
                 setHasErrorMaxTokens(false);
               } else {
                 setHasErrorMaxTokens(true);
@@ -122,7 +107,7 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
             onChange={(e) => {
               const newVal = Number(e.target.value);
               if (!isNaN(newVal) && newVal >= 0 && newVal <= 1) {
-                setTemperature(newVal);
+                settingsStore.temperature = newVal;
                 setHasErrorTemperature(false);
               } else {
                 setHasErrorTemperature(true);

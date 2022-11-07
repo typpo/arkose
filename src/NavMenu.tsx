@@ -7,6 +7,7 @@ import { saveAs } from 'file-saver';
 import { ToastContainer, toast } from 'react-toastify';
 
 import Settings from './Settings';
+import Stats from './Stats';
 
 import Logo from '../public/favicon.png';
 
@@ -22,6 +23,7 @@ interface NavMenuProps {
 
 export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuProps) {
   const [settingsOpen, setSettingsOpen] = React.useState<boolean>(false);
+  const [statsOpen, setStatsOpen] = React.useState<boolean>(false);
   const [fileAnchorEl, setFileAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClose = () => {
@@ -157,6 +159,20 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
             open={settingsOpen}
             onClose={() => {
               setSettingsOpen(false);
+              handleClose();
+            }}
+          />
+          <div
+            id="stats-menu"
+            className={styles.menuTopLevel}
+            onClick={(event) => setStatsOpen(true)}
+          >
+            Stats
+          </div>
+          <Stats
+            open={statsOpen}
+            onClose={() => {
+              setStatsOpen(false);
               handleClose();
             }}
           />
