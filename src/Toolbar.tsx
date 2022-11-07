@@ -45,14 +45,13 @@ export default function Toolbar({ editor }: ToolbarProps) {
   // Reference: https://tiptap.dev/installation/react#5-the-complete-setup
   // TODO(ian): Add tooltips with keyboard shortcuts
 
-  const [fontFamily, setFontFamily] = React.useState<string>(FONT_FAMILIES[0].value);
-
-  React.useEffect(() => {
-    editor.chain().focus().setFontFamily(fontFamily).run();
-  }, [fontFamily]);
-
   const activeNode = editor.state.selection.$head.parent;
   const activeHeading = activeNode.type.name === 'heading' ? activeNode.attrs.level : -1;
+  // TODO(ian): Font family state is still inaccurate if a single node has multiple styles.
+  const activeFontFamily =
+    // @ts-ignore: .content exists on the actual Fragment object
+    activeNode.content.content[0]?.marks.attrs?.fontFamily || FONT_FAMILIES[0].value;
+  const isCodeActive = editor.isActive('code') || editor.isActive('codeBlock');
 
   return (
     <div className={styles.toolbar}>
@@ -60,11 +59,12 @@ export default function Toolbar({ editor }: ToolbarProps) {
         <div className={styles.actions}>
           <Stack direction="row" spacing={1}>
             <TextField
-              sx={{ width: '10ch', '& fieldset': { border: 'none' }, 'align-self': 'center' }}
+              sx={{ width: '10ch', '& fieldset': { border: 'none' } }}
               select
-              value={fontFamily}
-              onChange={(e) => setFontFamily(e.target.value)}
+              value={isCodeActive ? FONT_FAMILIES[2].value : activeFontFamily}
+              onChange={(e) => editor.chain().focus().setFontFamily(e.target.value).run()}
               size="small"
+              disabled={isCodeActive}
             >
               {FONT_FAMILIES.map((option) => (
                 <MenuItem
