@@ -10,7 +10,7 @@ interface DocumentProps {
 
 export default function Document({ editor }: DocumentProps) {
   return (
-    <div className={styles.container}>
+    <div className={styles.page}>
       <EditorContent
         // @ts-ignore: Known issue https://github.com/ueberdosis/tiptap/issues/1344
         editor={editor}
