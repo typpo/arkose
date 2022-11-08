@@ -18,7 +18,7 @@
   align-items: center;
   justify-content: space-between;
   height: 3em;
-  max-width: calc(1024px + 8rem * 2);
+  max-width: calc(1024px + 6rem * 2);
   margin: 0 auto;
 }
 

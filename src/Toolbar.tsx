@@ -1,5 +1,3 @@
-import React from 'react';
-
 import BoldIcon from '@mui/icons-material/FormatBold';
 import ItalicIcon from '@mui/icons-material/FormatItalic';
 import UnderlineIcon from '@mui/icons-material/FormatUnderlined';
@@ -12,7 +10,6 @@ import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
 import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import LinkIcon from '@mui/icons-material/Link';
 import TextField from '@mui/material/TextField';
-//import LinkOffIcon from '@mui/icons-material/LinkOff';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 
@@ -204,15 +201,6 @@ export default function Toolbar({ editor }: ToolbarProps) {
             >
               <FormatAlignRightIcon />
             </IconButton>
-            {/*
-            <IconButton
-              aria-label="unlink"
-              onClick={() => editor.chain().focus().unsetLink().run()}
-              disabled={!editor.can().chain().focus().unsetLink().run()}
-            >
-              <LinkOffIcon />
-            </IconButton>
-            */}
           </Stack>
         </div>
       </div>
