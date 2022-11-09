@@ -13,6 +13,7 @@ import Document from './Document';
 import Toolbar from './Toolbar';
 import NavMenu from './NavMenu';
 import aiKeyboardShortcut from './aiKeyboardShortcut';
+import CustomTextAlign from './customTextAlign';
 
 import { documentStore } from './stores';
 import { useSnapshot } from 'valtio';
@@ -28,7 +29,7 @@ function App() {
       Underline,
       TextStyle,
       FontFamily,
-      TextAlign.configure({
+      CustomTextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
       Link.configure({
