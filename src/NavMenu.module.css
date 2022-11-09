@@ -28,6 +28,7 @@
 }
 
 .brand {
+  cursor: pointer;
   font-size: 9pt;
   opacity: 0.5;
   margin-top: 4px;

@@ -14,6 +14,7 @@ import Logo from '../public/favicon.png';
 import type { Editor } from '@tiptap/core';
 
 import styles from './NavMenu.module.css';
+import { doCompletion } from './completion';
 
 interface NavMenuProps {
   editor: Editor;
@@ -141,13 +142,14 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
                 'aria-labelledby': 'file-menu',
               }}
             >
-              <MenuItem onClick={handleCreateNewDocument}>New document</MenuItem>
-              <MenuItem onClick={handleOpenDocument}>Open JSON</MenuItem>
+              <MenuItem onClick={handleCreateNewDocument}>New</MenuItem>
               <Divider />
-              <MenuItem onClick={handleSaveHtml}>Save as HTML</MenuItem>
-              <MenuItem onClick={handleSaveMarkdown}>Save as Markdown</MenuItem>
-              <MenuItem onClick={handleSaveDocx}>Save as DOCX</MenuItem>
-              <MenuItem onClick={handleSaveJson}>Save as JSON</MenuItem>
+              <MenuItem onClick={handleOpenDocument}>Open</MenuItem>
+              <MenuItem onClick={handleSaveJson}>Save</MenuItem>
+              <Divider />
+              <MenuItem onClick={handleSaveHtml}>Export HTML</MenuItem>
+              <MenuItem onClick={handleSaveMarkdown}>Export Markdown</MenuItem>
+              <MenuItem onClick={handleSaveDocx}>Export DOCX</MenuItem>
             </Menu>
             <div
               id="settings-menu"
@@ -176,7 +178,7 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
             />
           </div>
           <div className={styles.menuRight}>
-            <div className={styles.brand}>
+            <div className={styles.brand} onClick={() => doCompletion(editor)}>
               Arkose AI
               <img src={Logo} alt="Arkose AI logo" />
             </div>
