@@ -26,7 +26,6 @@ const aiKeyboardShortcut = Extension.create({
           const { tokensUsed } = snapshot(statsStore);
           const { uuid } = snapshot(userStore);
           // TODO(ian): Handle selections
-          // TODO(ian): This relies on a hack that assumes the jotai atomWithStorage stores in a localStorage key with the same name as the atom.
           const pos = editor.state.selection.$anchor.pos;
           // FIXME this counts characters, not tokens
           const start = lookbackTokens ? Math.max(0, pos - lookbackTokens) : 0;
@@ -97,7 +96,7 @@ const aiKeyboardShortcut = Extension.create({
 
           const numTokensBefore = before.split(/\s/).length;
           const generated = completedText.split(/\s/).length;
-          statsStore.tokensUsed = tokensUsed + generated;
+          statsStore.tokensUsed = tokensUsed + generated + numTokensBefore;
         }
         run();
         return true;
