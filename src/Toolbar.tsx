@@ -83,8 +83,13 @@ export default function Toolbar({ editor }: ToolbarProps) {
               select
               value={activeHeading}
               onChange={(e) => {
-                const level = Number(e.target.value) as Level;
-                editor.chain().focus().toggleHeading({ level }).run();
+                const val = Number(e.target.value);
+                if (val === -1) {
+                  editor.chain().focus().setParagraph().run()
+                } else {
+                  const level = val as Level;
+                  editor.chain().focus().toggleHeading({ level }).run();
+                }
               }}
               size="small"
             >
