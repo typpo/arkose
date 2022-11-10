@@ -179,8 +179,8 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
           </div>
           <div className={styles.menuRight}>
             <div className={styles.brand} onClick={() => doCompletion(editor)}>
-              Arkose AI
-              <img src={Logo} alt="Arkose AI logo" />
+              Arkose
+              <img src={Logo} alt="Arkose logo" />
             </div>
           </div>
           {/*
