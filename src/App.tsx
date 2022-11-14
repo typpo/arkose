@@ -3,7 +3,6 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
-import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import FontFamily from '@tiptap/extension-font-family';
 import { useEditor } from '@tiptap/react';
@@ -16,13 +15,15 @@ import aiKeyboardShortcut from './aiKeyboardShortcut';
 import CustomTextAlign from './customTextAlign';
 
 import { documentStore } from './stores';
-import { useSnapshot } from 'valtio';
+
+import type { Editor } from '@tiptap/core';
 
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './App.module.css';
 
 function App() {
-  const { content } = useSnapshot(documentStore);
+  //const snap = useSnapshot(documentStore);
+  const { content: initialContent } = documentStore;
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -37,25 +38,22 @@ function App() {
       }),
       Placeholder.configure({
         placeholder: `Start writing... then press ${
-          window.navigator.platform.startsWith('Mac') ? 'Cmd' : 'Ctrl'
+          window.navigator.platform.startsWith('Mac') ? '⌘' : 'Ctrl'
         }+Enter to generate text with AI`,
       }),
       aiKeyboardShortcut,
     ],
-    content: JSON.parse(JSON.stringify(content)),
+    content: JSON.parse(JSON.stringify(initialContent)),
     autofocus: 'end',
+    onUpdate: debounce(({editor}: {editor: Editor}) => {
+      if (editor) {
+        documentStore.content = editor.getJSON();
+      }
+    }, 100),
   });
   if (!editor) {
     return <div>Loading...</div>;
   }
-
-  editor.on(
-    'update',
-    debounce(() => {
-      const content = editor.getJSON();
-      documentStore.content = content;
-    }, 100),
-  );
 
   const handleNewDocument = () => {
     editor.commands.setContent('');
