@@ -84,26 +84,30 @@ export async function doCompletion(editor: Editor) {
         user: uuid,
       }),
     });
-    if (!resp.ok) {
-      throw new Error(`OpenAI API returned ${resp.status}`);
+    if (resp.status === 429) {
+      throw new Error(
+        `You've run out of requests for today. Sign up for OpenAI and add your API key in Settings.`,
+      );
+    } else if (!resp.ok) {
+      throw new Error(`Error talking to OpenAI (${resp.status}). Check the console for more info.`);
     }
     completion = await resp.json();
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    toast.error('Error generating text. Check the console for more info.', {
+    toast.error(err.toString(), {
       hideProgressBar: true,
     });
-    isGenerating = false;
     return CompletionResult.Error;
+  } finally {
+    toast.dismiss(loadingToast);
+    editor.setEditable(true);
+    isGenerating = false;
   }
-  toast.dismiss(loadingToast);
-  editor.setEditable(true);
   const completedText = completion.choices[0].text as string | null;
   if (!completedText?.trim()) {
     toast.error("The AI didn't have anything to say. Try writing a bit more.", {
       hideProgressBar: true,
     });
-    isGenerating = false;
     return CompletionResult.Empty;
   }
 
@@ -131,6 +135,5 @@ export async function doCompletion(editor: Editor) {
   const generated = completedText.split(/\s/).length * 1.33;
   statsStore.tokensUsed = tokensUsed + generated + numTokensBefore;
 
-  isGenerating = false;
   return CompletionResult.Success;
 }
