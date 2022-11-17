@@ -19,7 +19,7 @@ subscribe(statsStore, () => {
 export const settingsStore = proxy(
   store.get('settings') || {
     apiKey: Config.OpenAI.apiKey || 'YOUR_API_KEY',
-    lookbackTokens: 800,
+    lookbackChars: 1024,
     maxTokens: 256,
     temperature: 0.7,
   },

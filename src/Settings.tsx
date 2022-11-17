@@ -12,9 +12,9 @@ import { settingsStore } from './stores';
 import { useSnapshot } from 'valtio';
 
 export default function Settings({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { apiKey, lookbackTokens, maxTokens, temperature } = useSnapshot(settingsStore);
+  const { apiKey, lookbackChars, maxTokens, temperature } = useSnapshot(settingsStore);
 
-  const [hasErrorLookbackTokens, setHasErrorLookbackTokens] = React.useState<boolean>(false);
+  const [hasErrorLookbackChars, setHasErrorLookbackChars] = React.useState<boolean>(false);
   const [hasErrorMaxTokens, setHasErrorMaxTokens] = React.useState<boolean>(false);
   const [hasErrorTemperature, setHasErrorTemperature] = React.useState<boolean>(false);
 
@@ -49,23 +49,23 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
             autoFocus
             margin="dense"
             id="name"
-            label="Max lookback tokens"
-            helperText="Approx. maximum number of tokens to provide as context to the AI (up to 4000)"
+            label="Max lookback characters"
+            helperText="Approx. maximum number of characters to provide as context to the AI (up to 4000)"
             type="number"
             InputProps={{ inputProps: { min: 1, max: 4000 } }}
             fullWidth
             variant="standard"
-            error={hasErrorLookbackTokens}
+            error={hasErrorLookbackChars}
             onChange={(e) => {
               const newVal = parseInt(e.target.value, 10);
               if (!isNaN(newVal) && newVal >= 1 && newVal <= 4000) {
-                settingsStore.lookbackTokens = newVal;
-                setHasErrorLookbackTokens(false);
+                settingsStore.lookbackChars = newVal;
+                setHasErrorLookbackChars(false);
               } else {
-                setHasErrorLookbackTokens(true);
+                setHasErrorLookbackChars(true);
               }
             }}
-            defaultValue={lookbackTokens}
+            defaultValue={lookbackChars}
           />
         </Box>
         <Box marginBottom={4}>

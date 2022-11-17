@@ -35,13 +35,13 @@ export async function doCompletion(editor: Editor) {
   }
   isGenerating = true;
 
-  const { apiKey, lookbackTokens, maxTokens, temperature } = snapshot(settingsStore);
+  const { apiKey, lookbackChars, maxTokens, temperature } = snapshot(settingsStore);
   const { tokensUsed } = snapshot(statsStore);
   const { uuid } = snapshot(userStore);
   // TODO(ian): Handle selections
   const pos = editor.state.selection.$anchor.pos;
   // FIXME this counts characters, not tokens
-  const start = lookbackTokens ? Math.max(0, pos - lookbackTokens) : 0;
+  const start = lookbackChars ? Math.max(0, pos - lookbackChars) : 0;
   const before = getTextFromDocument(editor.schema, editor.state.doc.cut(start, pos));
   const beforeTrimmed = before.trim();
   if (!beforeTrimmed || beforeTrimmed.split(/\s/).length < MIN_NUM_WORDS) {
