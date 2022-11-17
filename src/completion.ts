@@ -14,6 +14,8 @@ export enum CompletionResult {
   AlreadyGenerating = 4,
 }
 
+const MIN_NUM_WORDS = 10;
+
 function getTextFromDocument(schema: Schema, node: ProseMirrorNode) {
   // https://github.com/ueberdosis/tiptap/blob/4851fc5e9b6daccc15a1839e471db489401eca0c/packages/core/src/Editor.ts#L428
   return getText(node, {
@@ -41,6 +43,12 @@ export async function doCompletion(editor: Editor) {
   // FIXME this counts characters, not tokens
   const start = lookbackTokens ? Math.max(0, pos - lookbackTokens) : 0;
   const before = getTextFromDocument(editor.schema, editor.state.doc.cut(start, pos));
+  const beforeTrimmed = before.trim();
+  if (!beforeTrimmed || beforeTrimmed.split(/\s/).length < MIN_NUM_WORDS) {
+    toast.error('AI completion works best if you write more.');
+    isGenerating = false;
+    return;
+  }
   const after = getTextFromDocument(
     editor.schema,
     editor.state.doc.cut(pos, editor.state.doc.content.size),
@@ -118,8 +126,9 @@ export async function doCompletion(editor: Editor) {
   console.log('nodes', nodes);
   editor.commands.insertContent(nodes);
 
-  const numTokensBefore = before.split(/\s/).length;
-  const generated = completedText.split(/\s/).length;
+  // Approximate ratio of tokens:words is 1000:750
+  const numTokensBefore = before.split(/\s/).length * 1.33;
+  const generated = completedText.split(/\s/).length * 1.33;
   statsStore.tokensUsed = tokensUsed + generated + numTokensBefore;
 
   isGenerating = false;
