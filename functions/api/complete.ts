@@ -1,12 +1,15 @@
 import { Ratelimit } from '@upstash/ratelimit'; // for deno: see above
-import { Redis } from '@upstash/redis';
+import { Redis } from '@upstash/redis/cloudflare';
 
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(1, '10 s'),
-});
+const cache = new Map();
 
 export async function onRequestPost({ request, env }) {
+  const ratelimit = new Ratelimit({
+    redis: Redis.fromEnv(env),
+    limiter: Ratelimit.slidingWindow(1, '10 s'),
+    ephemeralCache: cache,
+  });
+
   const ip = request.headers.get('cf-connecting-ip');
   const { success, limit, remaining, reset } = await ratelimit.limit(ip);
   if (!success) {
