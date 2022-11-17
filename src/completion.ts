@@ -84,13 +84,18 @@ export async function doCompletion(editor: Editor) {
         user: uuid,
       }),
     });
-    if (!resp.ok) {
-      throw new Error(`OpenAI API returned ${resp.status}`);
+    if (resp.status === 429) {
+      throw new Error(
+        `You've run out of requests for today. Sign up for OpenAI and add your API key in Settings.`,
+      );
+    } else if (!resp.ok) {
+      throw new Error(`Error talking to OpenAI (${resp.status}). Check the console for more info.`);
     }
     completion = await resp.json();
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    toast.error('Error generating text. Check the console for more info.', {
+    toast.dismiss(loadingToast);
+    toast.error(err.toString(), {
       hideProgressBar: true,
     });
     isGenerating = false;
