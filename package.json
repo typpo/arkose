@@ -41,6 +41,8 @@
     "@types/store": "^2.0.2",
     "@types/turndown": "^5.0.1",
     "@types/uuid": "^8.3.4",
+    "@upstash/ratelimit": "^0.1.5",
+    "@upstash/redis": "^1.16.1",
     "@vitejs/plugin-react": "^2.2.0",
     "typescript": "^4.6.4",
     "vite": "^3.2.0"

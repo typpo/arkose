@@ -1,4 +1,31 @@
+import { Ratelimit } from '@upstash/ratelimit'; // for deno: see above
+import { Redis } from '@upstash/redis';
+
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(1, '10 s'),
+});
+
 export async function onRequestPost({ request, env }) {
+  const ip = request.headers.get('cf-connecting-ip');
+  const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+  if (!success) {
+    return new Response(
+      JSON.stringify({
+        error: `You have exceeded the rate limit of ${limit} requests per 10 seconds`,
+      }),
+      {
+        status: 429,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-RateLimit-Limit': String(limit),
+          'X-RateLimit-Remaining': String(remaining),
+          'X-RateLimit-Reset': String(reset),
+        },
+      },
+    );
+  }
+
   const json = await request.json();
   // TODO: Validate the request body
 
