@@ -1,12 +1,14 @@
 import { Ratelimit } from '@upstash/ratelimit'; // for deno: see above
 import { Redis } from '@upstash/redis/cloudflare';
 
+const REQUESTS_PER_DAY = 15;
+
 const cache = new Map();
 
 export async function onRequestPost({ request, env }) {
   const ratelimit = new Ratelimit({
     redis: Redis.fromEnv(env),
-    limiter: Ratelimit.fixedWindow(1, '86400 s'),
+    limiter: Ratelimit.fixedWindow(REQUESTS_PER_DAY, '86400 s'),
     ephemeralCache: cache,
   });
 

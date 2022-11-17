@@ -94,21 +94,20 @@ export async function doCompletion(editor: Editor) {
     completion = await resp.json();
   } catch (err: any) {
     console.error(err);
-    toast.dismiss(loadingToast);
     toast.error(err.toString(), {
       hideProgressBar: true,
     });
-    isGenerating = false;
     return CompletionResult.Error;
+  } finally {
+    toast.dismiss(loadingToast);
+    editor.setEditable(true);
+    isGenerating = false;
   }
-  toast.dismiss(loadingToast);
-  editor.setEditable(true);
   const completedText = completion.choices[0].text as string | null;
   if (!completedText?.trim()) {
     toast.error("The AI didn't have anything to say. Try writing a bit more.", {
       hideProgressBar: true,
     });
-    isGenerating = false;
     return CompletionResult.Empty;
   }
 
@@ -136,6 +135,5 @@ export async function doCompletion(editor: Editor) {
   const generated = completedText.split(/\s/).length * 1.33;
   statsStore.tokensUsed = tokensUsed + generated + numTokensBefore;
 
-  isGenerating = false;
   return CompletionResult.Success;
 }
