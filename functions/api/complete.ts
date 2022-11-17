@@ -6,7 +6,7 @@ const cache = new Map();
 export async function onRequestPost({ request, env }) {
   const ratelimit = new Ratelimit({
     redis: Redis.fromEnv(env),
-    limiter: Ratelimit.slidingWindow(1, '10 s'),
+    limiter: Ratelimit.fixedWindow(1, '10 s'),
     ephemeralCache: cache,
   });
 
