@@ -44,6 +44,10 @@ export async function onRequestPost({ request, env }) {
     },
     body: JSON.stringify({
       ...json,
+      user: request.headers.get('cf-connecting-ip') || json.user,
+      top_p: 1,
+      n: 1,
+      best_of: 1,
       model: 'text-davinci-002',
     }),
   });
