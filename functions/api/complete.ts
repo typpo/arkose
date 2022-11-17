@@ -6,7 +6,7 @@ const cache = new Map();
 export async function onRequestPost({ request, env }) {
   const ratelimit = new Ratelimit({
     redis: Redis.fromEnv(env),
-    limiter: Ratelimit.fixedWindow(1, '10 s'),
+    limiter: Ratelimit.fixedWindow(1, '86400 s'),
     ephemeralCache: cache,
   });
 
@@ -15,7 +15,7 @@ export async function onRequestPost({ request, env }) {
   if (!success) {
     return new Response(
       JSON.stringify({
-        error: `You have exceeded the rate limit of ${limit} requests per 10 seconds`,
+        error: `You have exceeded the limit of ${limit} requests per day`,
       }),
       {
         status: 429,
@@ -37,7 +37,7 @@ export async function onRequestPost({ request, env }) {
   const resp = await fetch('https://api.openai.com/v1/completions', {
     method: 'POST',
     headers: {
-      'content-type': 'application/json',
+      'Content-Type': 'application/json',
       authorization: `Bearer ${OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
@@ -48,6 +48,10 @@ export async function onRequestPost({ request, env }) {
   const data = await resp.json();
 
   return new Response(JSON.stringify(data), {
-    headers: { 'content-type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-RateLimit-Limit': String(limit),
+      'X-RateLimit-Remaining': String(remaining),
+    },
   });
 }
