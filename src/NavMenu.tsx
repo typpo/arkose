@@ -26,9 +26,11 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
   const [settingsOpen, setSettingsOpen] = React.useState<boolean>(false);
   const [statsOpen, setStatsOpen] = React.useState<boolean>(false);
   const [fileAnchorEl, setFileAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [aboutAnchorEl, setAboutAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClose = () => {
     setFileAnchorEl(null);
+    setAboutAnchorEl(null);
     editor.commands.focus();
   };
 
@@ -176,6 +178,39 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
                 handleClose();
               }}
             />
+            <div
+              id="about-menu"
+              className={styles.menuTopLevel}
+              onClick={(event) =>
+                aboutAnchorEl ? setAboutAnchorEl(null) : setAboutAnchorEl(event.currentTarget)
+              }
+            >
+              About
+            </div>
+            <Menu
+              elevation={2}
+              anchorEl={aboutAnchorEl}
+              open={!!aboutAnchorEl}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'about-menu',
+              }}
+            >
+              <MenuItem
+                onClick={() => {
+                  window.open('https://github.com/typpo/arkose/wiki', '_blank');
+                }}
+              >
+                User manual
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  window.open('https://github.com/typpo/arkose', '_blank');
+                }}
+              >
+                Source code
+              </MenuItem>
+            </Menu>
           </div>
           <div className={styles.menuRight}>
             <div className={styles.brand} onClick={() => doCompletion(editor)}>
