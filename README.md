@@ -9,11 +9,11 @@ Reasons to use Arkose:
 - **Write in Markdown** - Formatting, headings, bullets, code, etc.
 - **Portable** - Export your documents to other formats (markdown, html, docx, json)
 
-[&raquo; Learn more at the wiki &laquo;](https://github.com/typpo/arkose/wiki)
+**[&raquo; Learn more at the wiki &laquo;](https://github.com/typpo/arkose/wiki)**
 
 ## Try it
 
-Live online demo: [TODO]
+### [&raquo; Try the demo &laquo;](https://arkose.pages.dev/)
 
 Press `⌘-Enter` or `Ctrl-Enter` to have GPT-3 contribute to your writing.
 
