@@ -43,6 +43,7 @@ let currentUser = store.get('user');
 if (!currentUser) {
   currentUser = {
     uuid: uuidv4(),
+    remainingCompletions: 100,
   };
   store.set('user', currentUser);
 }

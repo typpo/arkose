@@ -8,10 +8,12 @@ import ListItemText from '@mui/material/ListItemText';
 import GithubIcon from '@mui/icons-material/GitHub';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { saveAs } from 'file-saver';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import { useSnapshot } from 'valtio';
 
 import Settings from './Settings';
 import Stats from './Stats';
+import { userStore } from './stores';
 
 import Logo from '../public/favicon.png';
 
@@ -27,6 +29,7 @@ interface NavMenuProps {
 }
 
 export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuProps) {
+  const { remainingCompletions } = useSnapshot(userStore);
   const [settingsOpen, setSettingsOpen] = React.useState<boolean>(false);
   const [statsOpen, setStatsOpen] = React.useState<boolean>(false);
   const [fileAnchorEl, setFileAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -231,6 +234,17 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
                 <ListItemText>Source code</ListItemText>
               </MenuItem>
             </Menu>
+            {remainingCompletions <= 5 && (
+              <div className={styles.notice}>
+                {remainingCompletions} completions remaining.{' '}
+                <a
+                  target="_blank"
+                  href="https://github.com/typpo/arkose/wiki/Obtaining-a-GPT-3-API-key"
+                >
+                  Learn more
+                </a>
+              </div>
+            )}
           </div>
           <div className={styles.menuRight}>
             <div className={styles.brand} onClick={() => doCompletion(editor)}>

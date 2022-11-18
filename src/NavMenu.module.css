@@ -56,6 +56,11 @@
   color: #98af99;
 }
 
+.notice {
+  font-size: 0.8rem;
+  color: #333;
+}
+
 @media (max-width: 1024px) {
   .gutter {
     padding: 0 2rem;

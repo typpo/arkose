@@ -84,6 +84,11 @@ export async function doCompletion(editor: Editor) {
         user: uuid,
       }),
     });
+    const remaining = resp.headers.get('X-RateLimit-Remaining');
+    if (remaining) {
+      console.log('updating remaining', remaining);
+      userStore.remainingCompletions = parseInt(remaining, 10);
+    }
     if (resp.status === 429) {
       throw new Error(
         `You've run out of requests for today. Sign up for OpenAI and add your API key in Settings.`,
@@ -127,12 +132,11 @@ export async function doCompletion(editor: Editor) {
     editor.commands.insertContent(paragraphTexts[0]);
     nodes = nodes.slice(1);
   }
-  console.log('nodes', nodes);
   editor.commands.insertContent(nodes);
 
   // Approximate ratio of tokens:words is 1000:750
-  const numTokensBefore = before.split(/\s/).length * 1.33;
-  const generated = completedText.split(/\s/).length * 1.33;
+  const numTokensBefore = Math.round(before.split(/\s/).length * 1.33);
+  const generated = Math.round(completedText.split(/\s/).length * 1.33);
   statsStore.tokensUsed = tokensUsed + generated + numTokensBefore;
 
   return CompletionResult.Success;
