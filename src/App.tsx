@@ -37,15 +37,18 @@ function App() {
         openOnClick: true,
       }),
       Placeholder.configure({
-        placeholder: `Start writing... then press ${
-          window.navigator.platform.startsWith('Mac') ? '⌘' : 'Ctrl'
-        }+Enter to generate text with AI`,
+        placeholder:
+          window.innerWidth <= 768
+            ? `Start writing... then press 'Arkose' to generate text with AI`
+            : `Start writing... then press ${
+                window.navigator.platform.startsWith('Mac') ? '⌘' : 'Ctrl'
+              }+Enter to generate text with AI`,
       }),
       aiKeyboardShortcut,
     ],
     content: JSON.parse(JSON.stringify(initialContent)),
     autofocus: 'end',
-    onUpdate: debounce(({editor}: {editor: Editor}) => {
+    onUpdate: debounce(({ editor }: { editor: Editor }) => {
       if (editor) {
         documentStore.content = editor.getJSON();
       }
