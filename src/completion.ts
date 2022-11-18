@@ -40,7 +40,6 @@ export async function doCompletion(editor: Editor) {
   const { uuid } = snapshot(userStore);
   // TODO(ian): Handle selections
   const pos = editor.state.selection.$anchor.pos;
-  // FIXME this counts characters, not tokens
   const start = lookbackChars ? Math.max(0, pos - lookbackChars) : 0;
   const before = getTextFromDocument(editor.schema, editor.state.doc.cut(start, pos));
   const beforeTrimmed = before.trim();
