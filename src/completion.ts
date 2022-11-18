@@ -14,7 +14,7 @@ export enum CompletionResult {
   AlreadyGenerating = 4,
 }
 
-const MIN_NUM_WORDS = 8;
+const MIN_NUM_WORDS = 4;
 
 function getTextFromDocument(schema: Schema, node: ProseMirrorNode) {
   // https://github.com/ueberdosis/tiptap/blob/4851fc5e9b6daccc15a1839e471db489401eca0c/packages/core/src/Editor.ts#L428

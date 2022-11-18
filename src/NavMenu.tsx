@@ -3,6 +3,10 @@ import React from 'react';
 import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import GithubIcon from '@mui/icons-material/GitHub';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { saveAs } from 'file-saver';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -143,6 +147,11 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
               MenuListProps={{
                 'aria-labelledby': 'file-menu',
               }}
+              PaperProps={{
+                style: {
+                  width: 250,
+                },
+              }}
             >
               <MenuItem onClick={handleCreateNewDocument}>New</MenuItem>
               <Divider />
@@ -195,20 +204,31 @@ export default function NavMenu({ editor, saved, onCreateNewDocument }: NavMenuP
               MenuListProps={{
                 'aria-labelledby': 'about-menu',
               }}
+              PaperProps={{
+                style: {
+                  width: 200,
+                },
+              }}
             >
               <MenuItem
                 onClick={() => {
                   window.open('https://github.com/typpo/arkose/wiki', '_blank');
                 }}
               >
-                User manual
+                <ListItemIcon>
+                  <HelpOutlineIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>User manual</ListItemText>
               </MenuItem>
               <MenuItem
                 onClick={() => {
                   window.open('https://github.com/typpo/arkose', '_blank');
                 }}
               >
-                Source code
+                <ListItemIcon>
+                  <GithubIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Source code</ListItemText>
               </MenuItem>
             </Menu>
           </div>
