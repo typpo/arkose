@@ -48,7 +48,7 @@ export async function onRequestPost({ request, env }) {
       top_p: 1,
       n: 1,
       best_of: 1,
-      model: 'text-davinci-002',
+      model: 'text-davinci-003',
     }),
   });
   const data = await resp.json();

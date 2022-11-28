@@ -73,7 +73,7 @@ export async function doCompletion(editor: Editor) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'text-davinci-002',
+        model: 'text-davinci-003',
         prompt: before.trim(),
         suffix: after.trim() ? after : undefined,
         max_tokens: maxTokens,
