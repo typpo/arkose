@@ -63,7 +63,7 @@ export async function doCompletion(editor: Editor) {
   const apiUrl =
     !apiKey || apiKey === 'YOUR_API_KEY'
       ? '/api/complete'
-      : 'https://api.openai.com/v1/completions';
+      : 'https://api.openai.com/v1/engines/text-davinci-003/completions';
   let completion;
   try {
     const resp = await fetch(apiUrl, {
@@ -73,7 +73,6 @@ export async function doCompletion(editor: Editor) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'text-davinci-003',
         prompt: before.trim(),
         suffix: after.trim() ? after : undefined,
         max_tokens: maxTokens,

@@ -36,7 +36,7 @@ export async function onRequestPost({ request, env }) {
 
   const { OPENAI_API_KEY } = env;
 
-  const resp = await fetch('https://api.openai.com/v1/completions', {
+  const resp = await fetch('https://api.openai.com/v1/engines/text-davinci-003/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -48,7 +48,6 @@ export async function onRequestPost({ request, env }) {
       top_p: 1,
       n: 1,
       best_of: 1,
-      model: 'text-davinci-003',
     }),
   });
   const data = await resp.json();
