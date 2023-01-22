@@ -1,4 +1,4 @@
-import { Ratelimit } from '@upstash/ratelimit'; // for deno: see above
+import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis/cloudflare';
 
 const REQUESTS_PER_DAY = 15;
