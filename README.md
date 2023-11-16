@@ -1,4 +1,4 @@
-# Arkose now support gpt-4-1106-preview
+### Note: 🎉 Arkose now support gpt-4-1106-preview!
 
 # Arkose, a GPT-3 enhanced document editor
 
