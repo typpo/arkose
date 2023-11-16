@@ -7,9 +7,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
+import OpenAI from "openai";
 import { settingsStore } from './stores';
 import { useSnapshot } from 'valtio';
+import Config from './config';
+
+export const openai = new OpenAI({apiKey: Config.OpenAI.apiKey, dangerouslyAllowBrowser : true});
 
 export default function Settings({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { apiKey, lookbackChars, maxTokens, temperature } = useSnapshot(settingsStore);
@@ -50,15 +53,15 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
             margin="dense"
             id="name"
             label="Max lookback characters"
-            helperText="Approx. maximum number of characters to provide as context to the AI (up to 4000)"
+            helperText="Approx. maximum number of characters to provide as context to the AI (up to 20000)"
             type="number"
-            InputProps={{ inputProps: { min: 1, max: 4000 } }}
+            InputProps={{ inputProps: { min: 1, max: 20000 } }}
             fullWidth
             variant="standard"
             error={hasErrorLookbackChars}
             onChange={(e) => {
               const newVal = parseInt(e.target.value, 10);
-              if (!isNaN(newVal) && newVal >= 1 && newVal <= 4000) {
+              if (!isNaN(newVal) && newVal >= 1 && newVal <= 20000) {
                 settingsStore.lookbackChars = newVal;
                 setHasErrorLookbackChars(false);
               } else {
@@ -74,15 +77,15 @@ export default function Settings({ open, onClose }: { open: boolean; onClose: ()
             margin="dense"
             id="name"
             label="Max tokens"
-            helperText="Maximum number of tokens to generate (up to 4000)"
+            helperText="Maximum number of tokens to generate (up to 4096)"
             type="number"
-            InputProps={{ inputProps: { min: 1, max: 4000 } }}
+            InputProps={{ inputProps: { min: 1, max: 2 } }}
             fullWidth
             variant="standard"
             error={hasErrorMaxTokens}
             onChange={(e) => {
               const newVal = parseInt(e.target.value, 10);
-              if (!isNaN(newVal) && newVal >= 1 && newVal <= 4000) {
+              if (!isNaN(newVal) && newVal >= 1 && newVal <= 4096) {
                 settingsStore.maxTokens = newVal;
                 setHasErrorMaxTokens(false);
               } else {

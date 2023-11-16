@@ -6,7 +6,7 @@ import { settingsStore, statsStore, userStore } from './stores';
 
 import type { Schema, Node as ProseMirrorNode } from 'prosemirror-model';
 import type { Editor } from '@tiptap/core';
-
+import {openai} from "./Settings";
 export enum CompletionResult {
   Success = 1,
   Empty = 2,
@@ -60,41 +60,17 @@ export async function doCompletion(editor: Editor) {
   editor.setEditable(false);
   const loadingToast = toast.loading('Generating text...');
 
-  const apiUrl =
-    !apiKey || apiKey === 'YOUR_API_KEY'
-      ? '/api/complete'
-      : 'https://api.openai.com/v1/engines/text-davinci-003/completions';
   let completion;
   try {
-    const resp = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        prompt: before.trim(),
-        suffix: after.trim() ? after : undefined,
-        max_tokens: maxTokens,
-        temperature: temperature,
-        best_of: 1,
-        presence_penalty: 0,
-        user: uuid,
-      }),
+
+    completion = await openai.chat.completions.create({
+      model: "gpt-4-1106-preview",
+      messages: [{"role": "system", "content": "You are a helpful assistant. You are helping them complete paperwork. You should generate professional output, and not trying to be conversational."},
+      {"role": "user", "content": before.trim(),}],
+      max_tokens: maxTokens,
+      temperature: temperature,
     });
-    const remaining = resp.headers.get('X-RateLimit-Remaining');
-    if (remaining) {
-      console.log('updating remaining', remaining);
-      userStore.remainingCompletions = parseInt(remaining, 10);
-    }
-    if (resp.status === 429) {
-      throw new Error(
-        `You've run out of requests for today. Sign up for OpenAI and add your API key in Settings.`,
-      );
-    } else if (!resp.ok) {
-      throw new Error(`Error talking to OpenAI (${resp.status}). Check the console for more info.`);
-    }
-    completion = await resp.json();
+
   } catch (err: any) {
     console.error(err);
     toast.error(err.toString(), {
@@ -106,7 +82,8 @@ export async function doCompletion(editor: Editor) {
     editor.setEditable(true);
     isGenerating = false;
   }
-  const completedText = completion.choices[0].text as string | null;
+  const completedText = completion.choices[0].message.content;
+  console.log(completedText);
   if (!completedText?.trim()) {
     toast.error("The AI didn't have anything to say. Try writing a bit more.", {
       hideProgressBar: true,
